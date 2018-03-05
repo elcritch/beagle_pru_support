@@ -1,4 +1,3 @@
-SRCDIRS = src
 SUBDIRS = pru/lib/rpmsg pru/lib/pru_support pru/lib/msgpack pru/lib/softspi
 TEST_SUBDIRS = test/softspi_test
 
@@ -8,10 +7,7 @@ ifeq ($(MIX_ENV),test)
 SUBDIRS += $(TEST_BUDIRS)
 endif
 
-all: $(SRCDIRS)
-
-$(SRCDIRS): _priv
-	$(MAKE) -C $@
+all: artifact
 
 artifact: $(SUBDIRS)
 
@@ -36,7 +32,6 @@ $(TEST_SUBDIRS): artifact_build
 
 clean: clean_artifact
 	$(eval export PRU_CGT := "/dev/null")
-	@for d in $(SRCDIRS); do (cd $$d; $(MAKE) clean ); done
 	@for d in $(SUBDIRS); do (cd $$d; $(MAKE) clean ); done
 	@for d in $(TEST_SUBDIRS); do (cd $$d; $(MAKE) clean ); done
 
