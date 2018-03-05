@@ -1,7 +1,7 @@
 defmodule Pru.Mixfile do
   use Mix.Project
 
-  @app :nerves_pru_support
+  @app :beagle_pru_support
 
   def project do
     [
