@@ -4,7 +4,7 @@ defmodule BeaglePruSupport do
   """
 
   @doc """
-  Hello world.
+  Base dir. 
 
   ## Examples
 
@@ -12,7 +12,7 @@ defmodule BeaglePruSupport do
       :world
 
   """
-  def hello do
-    :world
+  def base_dir() do
+    {:pru}
   end
 end
