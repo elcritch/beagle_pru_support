@@ -46,7 +46,7 @@ defmodule Pru.Mixfile do
       artifact_sites: [
         {:github_releases, "elcritch/#{@app}"}
       ],
-      checksum: package_files(:nerves)
+      checksum: package_files()
     ]
   end
 
@@ -55,82 +55,37 @@ defmodule Pru.Mixfile do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:toolchain_extras, "~> 0.1", github: "elcritch/toolchain_extras", runtime: false},
-      {:toolchain_extras_pru_cgt, "~> 2.2.1",
-       github: "elcritch/extras_toolchain_pru_cgt", branch: "v1.0.0rc"}
+      {:toolchain_extras_pru_cgt, "~> 2.2.1", github: "elcritch/extras_toolchain_pru_cgt"}
     ]
   end
 
   defp package do
     [
       maintainers: ["Mikel Cranfill", "Jaremy Creechley"],
-      files: package_files(:mix),
+      files: package_files(),
       licenses: ["MIT"],
       links: %{"Github" => "https://github.com/elcritch/pru"}
     ]
   end
 
-  defp artifact_files() do
-    [
-      "scripts",
-      "pru/lib/pru_support/pru_support_lib.h",
-      "pru/lib/pru_support/pru_support_pins.h",
-      "pru/lib/pru_support/pru_support_lib.c",
-      "pru/lib/pru_support/Makefile",
-      "pru/lib/rpmsg/Makefile",
-      "pru/lib/rpmsg/pru_rpmsg.c",
-      "pru/lib/rpmsg/pru_virtqueue.c",
-      "pru/lib/msgpack/msgpck.h",
-      "pru/lib/msgpack/Makefile",
-      "pru/lib/msgpack/msgpck.c",
-      "pru/lib/softspi/softspi.cpp",
-      "pru/lib/softspi/softspi.hpp",
-      "pru/lib/softspi/spi_xfer.hpp",
-      "pru/lib/softspi/Makefile",
-      "pru/lib/softspi/softspi.h",
-      "pru/lib/softspi/spi_helpers.hpp",
-      "pru/lib/softspi/softspi.c",
-      "pru/include/pru_virtqueue.h",
-      "pru/include/am335x/pru_ecap.h",
-      "pru/include/am335x/sys_pwmss.h",
-      "pru/include/am335x/pru_cfg.h",
-      "pru/include/am335x/pru_ctrl.h",
-      "pru/include/am335x/sys_mailbox.h",
-      "pru/include/am335x/pru_uart.h",
-      "pru/include/am335x/pru_intc.h",
-      "pru/include/am335x/pru_iep.h",
-      "pru/include/am335x/sys_mcspi.h",
-      "pru/include/ReadMe.txt",
-      "pru/include/pru_types.h",
-      "pru/include/types.h",
-      "pru/include/pru_rpmsg.h",
-      "pru/include/pru_virtio_ids.h",
-      "pru/include/pru_virtio_ring.h",
-      "pru/include/rsc_types.h",
-    ]
-  end
-
-  defp base_files() do
+  defp package_files() do
     [
       "Makefile",
       "LICENSE",
       "mix.exs",
       "README.md",
+      "scripts",
+      "pru/include/ReadMe.txt",
+      "pru/lib/pru_support/Makefile",
+      "pru/lib/rpmsg/Makefile",
+      "pru/lib/msgpack/Makefile",
+      "pru/lib/softspi/Makefile",
     ]
-  end
-
-  defp package_files(:mix) do
-    base_files() ++
-    [
-      "src/erlcmd.h",
-      "src/Makefile",
-      "src/pru_main.c",
-      "src/linux/i2c-dev.h",
-      "src/erlcmd.c"
-    ]
-  end
-
-  defp package_files(:nerves) do
-    base_files() ++ artifact_files()
+    ++ Path.wildcard("pru/**/*.c")
+    ++ Path.wildcard("pru/**/*.h")
+    ++ Path.wildcard("pru/**/*.cpp")
+    ++ Path.wildcard("pru/**/*.hpp")
+    ++ Path.wildcard("pru/**/Makefile")
   end
 
   def aliases() do
