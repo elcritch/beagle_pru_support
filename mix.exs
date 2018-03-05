@@ -15,7 +15,7 @@ defmodule Pru.Mixfile do
       compilers: [:nerves_package] ++ Mix.compilers(),
       make_clean: ["clean"],
       start_permanent: Mix.env() == :prod,
-      package: package(),
+      package: hex_package(),
       aliases: [loadconfig: [&bootstrap/1]],
       deps: deps()
     ]
@@ -29,6 +29,15 @@ defmodule Pru.Mixfile do
   end
 
   def aliases("host"), do: []
+
+  defp hex_package do
+    [
+      maintainers: ["Jaremy Creechley"],
+      files: package_files(),
+      licenses: ["MPL-2.0"],
+      links: %{"Github" => "https://github.com/elcritch/#{app}"}
+    ]
+  end
 
   def nerves_package do
     [
@@ -56,15 +65,6 @@ defmodule Pru.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:toolchain_extras, "~> 0.1", github: "elcritch/toolchain_extras", runtime: false},
       {:toolchain_extras_pru_cgt, "~> 2.2.1", github: "elcritch/extras_toolchain_pru_cgt"}
-    ]
-  end
-
-  defp package do
-    [
-      maintainers: ["Mikel Cranfill", "Jaremy Creechley"],
-      files: package_files(),
-      licenses: ["MIT"],
-      links: %{"Github" => "https://github.com/elcritch/pru"}
     ]
   end
 
