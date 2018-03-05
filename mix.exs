@@ -35,7 +35,7 @@ defmodule Pru.Mixfile do
       maintainers: ["Jaremy Creechley"],
       files: package_files(),
       licenses: ["MPL-2.0"],
-      links: %{"Github" => "https://github.com/elcritch/#{app}"}
+      links: %{"Github" => "https://github.com/elcritch/#{@app}"}
     ]
   end
 
@@ -79,13 +79,12 @@ defmodule Pru.Mixfile do
       "pru/lib/pru_support/Makefile",
       "pru/lib/rpmsg/Makefile",
       "pru/lib/msgpack/Makefile",
-      "pru/lib/softspi/Makefile",
-    ]
-    ++ Path.wildcard("pru/**/*.c")
-    ++ Path.wildcard("pru/**/*.h")
-    ++ Path.wildcard("pru/**/*.cpp")
-    ++ Path.wildcard("pru/**/*.hpp")
-    ++ Path.wildcard("pru/**/Makefile")
+      "pru/lib/softspi/Makefile"
+    ] ++
+      Path.wildcard("pru/**/*.c") ++
+      Path.wildcard("pru/**/*.h") ++
+      Path.wildcard("pru/**/*.cpp") ++
+      Path.wildcard("pru/**/*.hpp") ++ Path.wildcard("pru/**/Makefile")
   end
 
   def aliases() do
