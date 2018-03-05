@@ -12,8 +12,7 @@ defmodule Pru.Mixfile do
       version: "0.6.0",
       nerves_package: nerves_package(),
       elixir: "~> 1.6",
-      # compilers: [:nerves_package, :elixir_make, ] ++ Mix.compilers(),
-      compilers: [:nerves_package, :elixir_make] ++ Mix.compilers(),
+      compilers: [:nerves_package] ++ Mix.compilers(),
       make_clean: ["clean"],
       start_permanent: Mix.env() == :prod,
       package: package(),
@@ -55,7 +54,6 @@ defmodule Pru.Mixfile do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:elixir_make, "~> 0.4.0", runtime: false},
       {:toolchain_extras, "~> 0.1", github: "elcritch/toolchain_extras", runtime: false},
       {:toolchain_extras_pru_cgt, "~> 2.2.1",
        github: "elcritch/extras_toolchain_pru_cgt", branch: "v1.0.0rc"}
