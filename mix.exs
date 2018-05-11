@@ -9,7 +9,7 @@ defmodule Pru.Mixfile do
       description:
         "Basic library that enables easy interaction with the PRU cores present in the BeagleBone Black.",
       app: @app,
-      version: "0.6.1",
+      version: "0.6.2",
       nerves_package: nerves_package(),
       elixir: "~> 1.6",
       compilers: [:nerves_package] ++ Mix.compilers(),
@@ -34,7 +34,7 @@ defmodule Pru.Mixfile do
     [
       maintainers: ["Jaremy Creechley"],
       files: package_files(),
-      licenses: ["MPL-2.0"],
+      licenses: ["Apache-2.0"],
       links: %{"Github" => "https://github.com/elcritch/#{@app}"}
     ]
   end
@@ -63,8 +63,7 @@ defmodule Pru.Mixfile do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
-      # {:toolchain_extras, "~> 0.1.1", github: "elcritch/toolchain_extras", runtime: false},
-      {:toolchain_extras_pru_cgt, "~> 2.2.2", github: "elcritch/extras_toolchain_pru_cgt"}
+      {:toolchain_extras_pru_cgt, "~> 3.0.0", github: "elcritch/extras_toolchain_pru_cgt"}
     ]
   end
 
@@ -75,11 +74,7 @@ defmodule Pru.Mixfile do
       "mix.exs",
       "README.md",
       "scripts",
-      "pru/include/ReadMe.txt",
-      "pru/lib/pru_support/Makefile",
-      "pru/lib/rpmsg/Makefile",
-      "pru/lib/msgpack/Makefile",
-      "pru/lib/softspi/Makefile"
+      "pru/include/ReadMe.txt"
     ] ++
       Path.wildcard("pru/**/*.c") ++
       Path.wildcard("pru/**/*.h") ++
