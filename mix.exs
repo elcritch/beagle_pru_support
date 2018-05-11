@@ -63,7 +63,7 @@ defmodule Pru.Mixfile do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:toolchain_extras_pru_cgt, "~> 3.0.0", github: "elcritch/extras_toolchain_pru_cgt"}
+      {:toolchain_extras_pru_cgt, "~> 3.0.1"},
     ]
   end
 
