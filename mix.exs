@@ -12,7 +12,8 @@ defmodule Pru.Mixfile do
       version: "0.7.1",
       nerves_package: nerves_package(),
       elixir: "~> 1.6",
-      compilers: [:nerves_package] ++ Mix.compilers(),
+      compilers: [:nerves_package] ++ Mix.compilers() ++ (if @target != "host", do: [:elixir_make], else: []),
+
       make_clean: ["clean"],
       start_permanent: Mix.env() == :prod,
       package: hex_package(),
@@ -64,6 +65,8 @@ defmodule Pru.Mixfile do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:toolchain_extras_pru_cgt, "~> 3.0.1"},
+      {:elixir_make, "~> 0.3"},
+
     ]
   end
 
