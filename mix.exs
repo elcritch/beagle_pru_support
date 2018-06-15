@@ -40,25 +40,25 @@ defmodule Pru.Mixfile do
     ]
   end
 
-  def nerves_package do
-    [
-      name: @app,
-      type: :extras_toolchain,
-      platform: NervesExtras.Toolchain,
-      toolchain_extras: [
-        env_var: "PRU_LIB",
-        build_link_path: "",
-        clean_files: ["priv"],
-        archive_script: "scripts/archive.sh"
-      ],
-      platform_config: [],
-      target_tuple: :arm_unknown_linux_gnueabihf,
-      artifact_sites: [
-        {:github_releases, "elcritch/#{@app}"}
-      ],
-      checksum: package_files()
-    ]
-  end
+  # def nerves_package do
+  #   [
+  #     name: @app,
+  #     type: :extras_toolchain,
+  #     platform: NervesExtras.Toolchain,
+  #     toolchain_extras: [
+  #       env_var: "PRU_LIB",
+  #       build_link_path: "",
+  #       clean_files: ["priv"],
+  #       archive_script: "scripts/archive.sh"
+  #     ],
+  #     platform_config: [],
+  #     target_tuple: :arm_unknown_linux_gnueabihf,
+  #     artifact_sites: [
+  #       {:github_releases, "elcritch/#{@app}"}
+  #     ],
+  #     checksum: package_files()
+  #   ]
+  # end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
