@@ -9,7 +9,7 @@ defmodule Pru.Mixfile do
       description:
         "Basic library that enables easy interaction with the PRU cores present in the BeagleBone Black.",
       app: @app,
-      version: "0.7.1",
+      version: "0.7.2",
       nerves_package: nerves_package(),
       elixir: "~> 1.6",
       compilers: [:nerves_package] ++ Mix.compilers() ,
@@ -65,6 +65,7 @@ defmodule Pru.Mixfile do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:toolchain_extras_pru_cgt, "~> 3.0.1"},
+      {:toolchain_extras, "~> 0.2", github: "elcritch/toolchain_extras", branch: "exper-pkg-compile", override: true},
       {:elixir_make, "~> 0.3"},
 
     ]
