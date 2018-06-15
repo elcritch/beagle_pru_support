@@ -10,7 +10,7 @@ defmodule Pru.Mixfile do
         "Basic library that enables easy interaction with the PRU cores present in the BeagleBone Black.",
       app: @app,
       version: "0.7.1",
-      nerves_package: nerves_package(),
+      # nerves_package: nerves_package(),
       elixir: "~> 1.6",
       compilers: [:nerves_package] ++ Mix.compilers() ++ (if @target != "host", do: [:elixir_make], else: []),
 
