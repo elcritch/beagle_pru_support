@@ -12,7 +12,7 @@ defmodule Pru.Mixfile do
       version: "0.7.1",
       nerves_package: nerves_package(),
       elixir: "~> 1.6",
-      compilers: Mix.compilers() ++ (if @target != "host", do: [:elixir_make], else: []),
+      compilers: [:nerves_package] ++ Mix.compilers() ,
 
       make_clean: ["clean"],
       start_permanent: Mix.env() == :prod,
