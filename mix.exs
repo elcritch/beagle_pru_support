@@ -10,14 +10,14 @@ defmodule Pru.Mixfile do
         "Basic library that enables easy interaction with the PRU cores present in the BeagleBone Black.",
       app: @app,
       version: "0.7.1",
-      # nerves_package: nerves_package(),
+      nerves_package: nerves_package(),
       elixir: "~> 1.6",
-      compilers: [:nerves_package] ++ Mix.compilers() ++ (if @target != "host", do: [:elixir_make], else: []),
+      compilers: Mix.compilers() ++ (if @target != "host", do: [:elixir_make], else: []),
 
       make_clean: ["clean"],
       start_permanent: Mix.env() == :prod,
       package: hex_package(),
-      # aliases: [loadconfig: [&bootstrap/1]],
+      aliases: [loadconfig: [&bootstrap/1]],
       deps: deps()
     ]
   end
@@ -40,25 +40,25 @@ defmodule Pru.Mixfile do
     ]
   end
 
-  # def nerves_package do
-  #   [
-  #     name: @app,
-  #     type: :extras_toolchain,
-  #     platform: NervesExtras.Toolchain,
-  #     toolchain_extras: [
-  #       env_var: "PRU_LIB",
-  #       build_link_path: "",
-  #       clean_files: ["priv"],
-  #       archive_script: "scripts/archive.sh"
-  #     ],
-  #     platform_config: [],
-  #     target_tuple: :arm_unknown_linux_gnueabihf,
-  #     artifact_sites: [
-  #       {:github_releases, "elcritch/#{@app}"}
-  #     ],
-  #     checksum: package_files()
-  #   ]
-  # end
+  def nerves_package do
+    [
+      name: @app,
+      type: :extras_toolchain,
+      platform: NervesExtras.Toolchain,
+      toolchain_extras: [
+        env_var: "PRU_LIB",
+        build_link_path: "",
+        clean_files: ["priv"],
+        archive_script: "scripts/archive.sh"
+      ],
+      platform_config: [],
+      target_tuple: :arm_unknown_linux_gnueabihf,
+      artifact_sites: [
+        {:github_releases, "elcritch/#{@app}"}
+      ],
+      checksum: package_files()
+    ]
+  end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
