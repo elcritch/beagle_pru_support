@@ -17,7 +17,7 @@ defmodule Pru.Mixfile do
       make_clean: ["clean"],
       start_permanent: Mix.env() == :prod,
       package: hex_package(),
-      aliases: [loadconfig: [&bootstrap/1]],
+      # aliases: [loadconfig: [&bootstrap/1]],
       deps: deps()
     ]
   end
