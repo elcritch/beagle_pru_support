@@ -166,7 +166,7 @@ inline bool kickReceived(uint8_t interrupt_id) {
     return true;
   }
   else {
-    return true;
+    return false;
   }
 }
 
