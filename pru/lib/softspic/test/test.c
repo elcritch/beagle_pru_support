@@ -1,6 +1,9 @@
 
 #include "acutest.h"
 
+// #define NOOP delay_test_cycles()
+#define PRU_SUPPORT_OVERRIDE_GPIO_FUNCS
+
 #include "../spi-devs.h"
 
 #include <pru_support_lib.h>
@@ -71,10 +74,10 @@ void print(PS_t ps) {
 #define MAX_CYCLES 4096
 
 struct SimpleCycleTiming {
-  
   PS_t states[MAX_CYCLES];
   uint64_t cycle;
   PS_t current;
+  SpiPins_t iopins;
 };
 typedef struct SimpleCycleTiming SCT_t;
 
@@ -85,14 +88,14 @@ SCT_t* simplecycletiming_init() {
   return t;
 }
 
-void sct_set_pin(SCT_t *this, Pin pin, uint32_t state, SpiPins_t iopins) {
-  if (pin == iopins.mosi) {
+void sct_set_pin(SCT_t *this, Pin pin, uint32_t state) {
+  if (pin == this->iopins.mosi) {
     this->current.mosi = state;
     this->current.miso = !state;
   }
-  else if (pin == iopins.miso)
+  else if (pin == this->iopins.miso)
     this->current.miso = state;
-  else if (pin == iopins.sck)
+  else if (pin == this->iopins.sck)
     this->current.sck = state;
   else {
     this->current.other_pin = pin;
@@ -100,16 +103,16 @@ void sct_set_pin(SCT_t *this, Pin pin, uint32_t state, SpiPins_t iopins) {
   }
 }
 
-bool sct_get_pin(SCT_t *this, Pin pin, SpiPins_t iopins) {
-  if (pin == iopins.mosi)
+bool sct_get_pin(SCT_t *this, Pin pin) {
+  if (pin == this->iopins.mosi)
     return this->current.mosi;
-  else if (pin == iopins.miso)
+  else if (pin == this->iopins.miso)
   {
       uint8_t ret = this->current.miso;
       this->current.miso = 2+ret;
       return ret;
   }
-  else if (pin == iopins.sck)
+  else if (pin == this->iopins.sck)
     return this->current.sck;
   else if (pin == this->current.other_pin) {
     uint8_t ret =  this->current.other_state;
@@ -127,6 +130,58 @@ void sct_incr(SCT_t *this) {
     this->current.cycle = this->cycle;
 }
 
+
+// Hardware Emulation
+void delay_test_cycles();
+void digitalWrite(uint32_t gpio_bitmask, bool state);
+bool digitalRead(uint32_t gpio_bitmask);
+void digitalToggle(uint32_t gpio_bitmask);
+
+SpiPins_t iopins = {
+  .miso = 10,
+  .mosi = 11,
+  .sck = 14,
+  .sck_dir = 0,
+};
+SpiPins_t iopins_inv = {
+  .miso = 10,
+  .mosi = 11,
+  .sck = 14,
+  .sck_dir = 1,
+};
+
+
+SCT_t _cycle_data = {
+  .cycle = 0,
+  .iopins = {
+    .miso = 10,
+    .mosi = 11,
+    .sck = 14,
+    .sck_dir = 0,
+  },
+};
+
+SCT_t* cycle_data = &_cycle_data;
+
+void delay_test_cycles() {
+  sct_incr(cycle_data);
+}
+
+void digitalWrite(uint32_t gpio_bitmask, bool state) {
+  sct_set_pin(cycle_data, gpio_bitmask, state);
+  // cycle_data.incr();
+}
+void digitalToggle(uint32_t gpio_bitmask) {
+  /* cycle_data->set_pin(gpio_bitmask, !cycle_data->get_pin(gpio_bitmask)); */
+  sct_set_pin(cycle_data, gpio_bitmask, !sct_get_pin(cycle_data, gpio_bitmask));
+  // cycle_data.incr();
+}
+bool digitalRead(uint32_t gpio_bitmask) {
+  bool res = sct_get_pin(cycle_data, gpio_bitmask);
+  /* bool res = cycle_data->get_pin(gpio_bitmask); */
+  // cycle_data.incr();
+  return res;
+}
 
 void test_example(void)
 {
