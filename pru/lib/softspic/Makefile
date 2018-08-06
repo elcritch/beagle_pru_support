@@ -41,8 +41,9 @@ TARGET=$(GEN_DIR)/$(PROJ_NAME).lib
 SOURCES=$(wildcard *.c)
 #Using .object instead of .obj in order to not conflict with the CCS build process
 OBJECTS=$(patsubst %,$(GEN_DIR)/%,$(SOURCES:.c=.object))
+TOBJECTS=$(patsubst %,$(TEST_DIR)/%,$(SOURCES:.c=.o)) test/munit.c
 
-TEST_FLAGS=-I. -I.. -I../../include/ -I../../include/am335x/ -DTEST_BUILD -DSPI_CUSTOM_TIMING_CALLBACK
+TEST_FLAGS=-O3 -g -I. -I.. -I../../include/ -I../../include/am335x/ -DTEST_BUILD -DSPI_CUSTOM_TIMING_CALLBACK
 
 
 all: printStart $(TARGET) printEnd
@@ -55,8 +56,8 @@ test/%.o: test/%.c
 test/%.o: %.c
 	$(CC) -c -o $@ $< $(TEST_FLAGS)
 
-test/test: test/spi-devs.o test/munit.o
-	$(CC) $(TEST_FLAGS) $< $@.c -o $@
+test/test: $(TOBJECTS)
+	$(CC) $(TEST_FLAGS) $@.c -o $@ $^
 
 printStart:
 	@echo ''

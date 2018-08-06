@@ -3,8 +3,7 @@
 
 #include "spi-devs.h"
 
-#define SPI_CLOCK_MASK(value) ~(uint32_t)(value^pins.sck_dir) + 1
-#define SPI_VALUE(value) ~(uint32_t)(value) + 1
+#define SPI_CLOCK_MASK(value) (value^pins.sck_dir)
 #define SPI_UNPACK(value, idx) ( (value >> idx) & 0x1 )
 
 #ifndef SPI_CUSTOM_TIMING_CALLBACK
@@ -14,8 +13,8 @@ extern void spi_delay(uint32_t time);
 #endif // SPI_TIMING_CALLBACK
 
 //  clock standard
-inline void spi_clock_tick(SpiPins_t pins) { digitalWrite(pins.sck, SPI_CLOCK_MASK(HIGH));}
-inline void spi_clock_tock(SpiPins_t pins) { digitalWrite(pins.sck, SPI_CLOCK_MASK(LOW));}
+inline void spi_clock_tick(SpiPins_t pins) { digitalWrite((uint32_t)pins.sck, SPI_CLOCK_MASK(HIGH));}
+inline void spi_clock_tock(SpiPins_t pins) { digitalWrite((uint32_t)pins.sck, SPI_CLOCK_MASK(LOW));}
 
 inline uint32_t spi_reverse_bits(uint32_t value)
 {
@@ -37,7 +36,7 @@ inline bool spi_bit_cpha1(bool value, SpiPins_t pins, SpiTimings_t timings)
 
   spi_clock_tick(pins);
   spi_delay(timings.c0); /* Timings::delayCyclesP0(); */
-  digitalWrite(pins.mosi, SPI_VALUE(value));
+  digitalWrite((uint32_t)pins.mosi, value);
   // when DataTxEdge == TxClockRise (CPOL=1) data will be captured at falling edge propagation 
   spi_delay(timings.c1); /* Timings::delayCyclesP1(); */
   spi_clock_tock(pins); /* Clock::template tock<SpiPins_t>(); */
@@ -56,7 +55,7 @@ inline bool spi_bit_cpha0(bool value, SpiPins_t pins, SpiTimings_t timings)
   bool read = 0;
 
   // changing MOSI big while SCK low, propogation
-  digitalWrite(pins.mosi, SPI_VALUE(value));
+  digitalWrite((uint32_t)pins.mosi, value);
   // there is a requirement that LOW and HIGH have identical interval!
   spi_delay(timings.c1); /* Timings::delayCyclesP1(); */
   spi_clock_tick(pins); /* Clock::template tick<SpiPins_t>(); */
@@ -77,7 +76,7 @@ uint32_t spi_xfer_cpha0(uint32_t data, uint8_t bit_count, SpiPins_t pins, SpiTim
   uint32_t result = 0;
 
   // Ensure MOSI lines low
-  digitalWrite(pins.mosi, SPI_VALUE(LOW));
+  digitalWrite((uint32_t)pins.mosi, LOW);
 
   // Start xfer cycle
   spi_clock_tock(pins); // Clock::template tock<SpiPins_t>();
@@ -88,7 +87,7 @@ uint32_t spi_xfer_cpha0(uint32_t data, uint8_t bit_count, SpiPins_t pins, SpiTim
   for (uint8_t idx = 0; idx < bit_count; idx++)
     result = (result << 1) | spi_bit_cpha0(SPI_UNPACK(data, idx), pins, timings);
 
-  digitalWrite(pins.mosi, SPI_VALUE(LOW));
+  digitalWrite((uint32_t)pins.mosi, LOW);
   // Leave MOSI lines low
 
   spi_delay(timings.post); 
@@ -100,7 +99,7 @@ uint32_t spi_xfer_cpha1(uint32_t data, uint8_t bit_count, SpiPins_t pins, SpiTim
   uint32_t result = 0;
 
   // Ensure MOSI lines low
-  digitalWrite(pins.mosi, SPI_VALUE(LOW));
+  digitalWrite((uint32_t)pins.mosi, LOW);
 
   // Start xfer cycle
   spi_clock_tock(pins); // Clock::template tock<SpiPins_t>();
@@ -112,7 +111,7 @@ uint32_t spi_xfer_cpha1(uint32_t data, uint8_t bit_count, SpiPins_t pins, SpiTim
     result = (result << 1) | spi_bit_cpha1(SPI_UNPACK(data, idx), pins, timings);
 
   // Leave MOSI lines low
-  digitalWrite(pins.mosi, SPI_VALUE(LOW));
+  digitalWrite((uint32_t)pins.mosi, LOW);
 
   spi_delay(timings.post); 
 

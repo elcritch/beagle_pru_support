@@ -1,6 +1,8 @@
 
 #ifndef _SOFTWARE_SPI_DEVS__
 
+/* #define PRU_SUPPORT_OVERRIDE_GPIO_FUNCS */
+
 #include <pru_support_lib.h>
 
 struct SpiPins {
