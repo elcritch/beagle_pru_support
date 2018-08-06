@@ -134,11 +134,11 @@ inline void digitalToggle(uint32_t gpio_bitmask) {
   // est. to be 2 cycles (~10 ns)
   __R30 ^= gpio_bitmask;
 }
-/* #else */
+#else
 
-/* extern void digitalWrite(uint32_t gpio_bitmask, bool state); */
-/* extern bool digitalRead(uint32_t gpio_bitmask); */
-/* extern void digitalToggle(uint32_t gpio_bitmask); */
+extern void digitalWrite(uint32_t gpio_bitmask, bool state);
+extern bool digitalRead(uint32_t gpio_bitmask);
+extern void digitalToggle(uint32_t gpio_bitmask);
 
 #endif
 
