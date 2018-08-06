@@ -16,6 +16,8 @@ static inline void delayCycles(int cycles)
   // __nop();
 }
 
+void spi_delay(uint32_t time) { while (--time) delayCycles(10); }
+
 static MunitResult
 test_compare(const MunitParameter params[], void* data) {
   /* We'll use these later */
