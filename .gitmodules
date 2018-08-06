@@ -1,6 +1,3 @@
 [submodule "pru/lib/empack"]
 	path = pru/lib/empack
 	url = git@github.com:elcritch/empack.git
-[submodule "pru/lib/munit"]
-	path = pru/lib/munit
-	url = https://github.com/nemequ/munit.git
