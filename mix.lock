@@ -4,6 +4,6 @@
   "elixir_make": {:hex, :elixir_make, "0.4.1", "6628b86053190a80b9072382bb9756a6c78624f208ec0ff22cb94c8977d80060", [:mix], [], "hexpm"},
   "ex_doc": {:hex, :ex_doc, "0.18.3", "f4b0e4a2ec6f333dccf761838a4b253d75e11f714b85ae271c9ae361367897b7", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
   "nerves": {:hex, :nerves, "1.0.1", "06e311584bf346622afc37ffd6f0eb581288c918ed71b8a7a14f230062eabf31", [:mix], [{:distillery, "~> 1.4", [hex: :distillery, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}], "hexpm"},
-  "toolchain_extras": {:git, "https://github.com/elcritch/toolchain_extras.git", "7bdb1d52a68d41479260a9d48f9e25aaafc2da72", [branch: "exper-pkg-compile"]},
+  "toolchain_extras": {:git, "https://github.com/elcritch/toolchain_extras.git", "376fc5bf45ee9d462b354c9ac5a724b6f7fde680", [branch: "exper-pkg-compile"]},
   "toolchain_extras_pru_cgt": {:hex, :toolchain_extras_pru_cgt, "3.0.1", "4fe34d5bb95238f777f8754f4f29a1749996163aac9ec09a22c23922c6728a36", [:mix], [{:nerves, "~> 1.0", [hex: :nerves, repo: "hexpm", optional: false]}, {:toolchain_extras, "~> 0.2", [hex: :toolchain_extras, repo: "hexpm", optional: false]}], "hexpm"},
 }

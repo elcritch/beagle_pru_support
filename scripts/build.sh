@@ -9,9 +9,8 @@ set -e
 set -x
 
 WORK_DIR=$1
-TARBALL_PATH=$2
-
-INSTALL_DIR=_build/pru/
+# TARBALL_PATH=$2
+INSTALL_DIR=${2:-_build/pru/}
 
 BUILD_OS=$(uname -s)
 
