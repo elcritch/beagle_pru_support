@@ -151,7 +151,7 @@ SpiPins_t iopins_inv = {
 };
 
 
-SCT_t _cycle_data = {
+SCT_t _cycle_data_std = {
   .cycle = 0,
   .iopins = {
     .miso = 10,
@@ -160,8 +160,17 @@ SCT_t _cycle_data = {
     .sck_dir = 0,
   },
 };
+SCT_t _cycle_data_inv = {
+  .cycle = 0,
+  .iopins = {
+    .miso = 10,
+    .mosi = 11,
+    .sck = 14,
+    .sck_dir = 1,
+  },
+};
 
-SCT_t* cycle_data = &_cycle_data;
+SCT_t* cycle_data = &_cycle_data_std;
 
 void delay_test_cycles() {
   sct_incr(cycle_data);
@@ -182,6 +191,57 @@ bool digitalRead(uint32_t gpio_bitmask) {
   // cycle_data.incr();
   return res;
 }
+
+
+void printCycleDataFull() {
+  printf("Done...\n");
+  for (int idx = 0; idx < cycle_data->cycle; idx++)
+    print(cycle_data->states[idx]);
+  printf("\n\n");
+}
+
+/* std::cout<<std::bitset<8>(out)<<std::endl; */
+void printBits(uint32_t data, uint8_t count) {
+  printf("0b");
+  for (uint8_t i = 0; i < count; i++) {
+    printf("%c", (data >> i & 0x1) ? '1' : '0');
+  }
+  printf(" ");
+}
+
+void printCycleData(uint8_t out) {
+  printf("sck:  ");
+  for (int i=0; i < cycle_data->cycle; i++) {
+    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
+    printf("%d", cycle_data->states[i].sck);
+  }
+  printf("mosi: ");
+  for (int i=0; i < cycle_data->cycle; i++) {
+    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
+    printf("%d", cycle_data->states[i].mosi);
+  }
+  printf("miso: ");
+  for (int i=0; i < cycle_data->cycle; i++) {
+    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
+    printf("%d", cycle_data->states[i].miso);
+  }
+  for (int i=0; i < cycle_data->cycle; i++) {
+    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
+    /* std::cout << cycle_data->states[i].other_state); */
+    printf("%d", cycle_data->states[i].other_state);
+  }
+  printf("read out: %d ", out);
+  /* std::cout<<std::bitset<8>(out)<<std::endl; */
+  printBits(out, 8);
+
+};
+
+SpiTimings_t timings = {
+  .pre = 7,
+  .c0 = 5,
+  .c1 = 5,
+  .post = 7,
+};
 
 void test_example(void)
 {
