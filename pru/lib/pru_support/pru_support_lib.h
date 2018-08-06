@@ -98,8 +98,8 @@ volatile uint32_t __R31;
 #define HOST_INT_2			((uint32_t) 1 << 30)
 #define HOST_INT_1			((uint32_t) 1 << 31)
 
-#define LOW  ((uint32_t)0x00000000)
-#define HIGH ((uint32_t)0xFFFFFFFF)
+#define LOW  ((bool)false)
+#define HIGH ((bool)true)
 
 #define GPIO(NUMBER) (1 << NUMBER)
 
@@ -112,10 +112,15 @@ volatile register uint32_t __R31;
 #endif
 
 #ifndef PRU_SUPPORT_OVERRIDE_GPIO_FUNCS
-inline void digitalWrite(uint32_t gpio_bitmask, uint32_t state) {
+inline void digitalWrite(uint32_t gpio_bitmask, bool state) {
+  if (state)
+    __R30 = __R30 & ~gpio_bitmask;
+  else
+    __R30 = __R30 | (gpio_bitmask|gpio_bitmask); // make io symmetric timing
+
   // 1 cycle read for R30, 1 inst for &, 1 inst for ^, 1 for ^, and 1 for =
   // est. to be 5 cycles (~20 ns)
-  __R30 ^= gpio_bitmask & ( __R30 ^ state);
+  /* __R30 ^= gpio_bitmask & ( __R30 ^ ((uint32_t)(~state) + 1)); */
 }
 
 inline bool digitalRead(uint32_t gpio_bitmask) {
@@ -129,6 +134,11 @@ inline void digitalToggle(uint32_t gpio_bitmask) {
   // est. to be 2 cycles (~10 ns)
   __R30 ^= gpio_bitmask;
 }
+/* #else */
+
+/* extern void digitalWrite(uint32_t gpio_bitmask, bool state); */
+/* extern bool digitalRead(uint32_t gpio_bitmask); */
+/* extern void digitalToggle(uint32_t gpio_bitmask); */
 
 #endif
 
