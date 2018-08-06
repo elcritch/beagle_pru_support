@@ -23,7 +23,11 @@ extern "C" {
 #include <pru_cfg.h>
 #include <pru_intc.h>
 
-/* volatile uint32_t __R31; */
+#define PRU_SUPPORT_OVERRIDE_R30 
+#define PRU_SUPPORT_OVERRIDE_R31
+
+volatile uint32_t __R30;
+volatile uint32_t __R31;
 
 #endif
 

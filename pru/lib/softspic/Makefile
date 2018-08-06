@@ -32,16 +32,31 @@ PROJ_NAME=$(CURRENT_DIR)
 INCLUDE=--include_path=../../include --include_path=../../include/am335x
 #-----------------------------------
 GEN_DIR=gen
+TEST_DIR=test
 
 #Common compiler flags (Defined in 'PRU Optimizing C/C++ Compiler User's Guide)
 CFLAGS=-v3 -O2 --display_error_number --endian=little --hardware_mac=on --obj_directory=$(GEN_DIR) --pp_directory=$(GEN_DIR) -ppd -ppa
 
 TARGET=$(GEN_DIR)/$(PROJ_NAME).lib
-SOURCES=$(wildcard *.cpp)
+SOURCES=$(wildcard *.c)
 #Using .object instead of .obj in order to not conflict with the CCS build process
-OBJECTS=$(patsubst %,$(GEN_DIR)/%,$(SOURCES:.cpp=.object))
+OBJECTS=$(patsubst %,$(GEN_DIR)/%,$(SOURCES:.c=.object))
+
+TEST_FLAGS=-I. -I.. -I../../include/ -I../../include/am335x/ -DTEST_BUILD -DSPI_CUSTOM_TIMING_CALLBACK
+
 
 all: printStart $(TARGET) printEnd
+
+test: test/test
+
+test/%.o: test/%.c
+	$(CC) -c -o $@ $< $(TEST_FLAGS)
+
+test/%.o: %.c
+	$(CC) -c -o $@ $< $(TEST_FLAGS)
+
+test/test: test/spi-devs.o test/munit.o
+	$(CC) $(TEST_FLAGS) $< $@.c -o $@
 
 printStart:
 	@echo ''
@@ -66,7 +81,7 @@ $(TARGET): $(OBJECTS)
 	@echo 'Output files can be found in the "$(GEN_DIR)" directory'
 
 # Invokes the compiler on all c files in the directory to create the object files
-$(GEN_DIR)/%.object: %.cpp
+$(GEN_DIR)/%.object: %.c
 	@mkdir -p $(GEN_DIR)
 	@echo ''
 	@echo 'Building file: $<'
@@ -83,6 +98,7 @@ clean:
 	@echo ''
 	@echo 'Removing files in the "$(GEN_DIR)" directory'
 	@rm -rf $(GEN_DIR)
+	@rm -rf $(TEST_DIR)/*.a $(TEST_DIR)/*.o
 	@rm -rf ../../../$(ARTIFACT_DIR)/$(PROJ_NAME).lib
 	@echo ''
 	@echo 'Finished cleaning project: $(PROJ_NAME)'
