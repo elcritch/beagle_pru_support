@@ -43,7 +43,7 @@ SOURCES=$(wildcard *.c)
 OBJECTS=$(patsubst %,$(GEN_DIR)/%,$(SOURCES:.c=.object))
 TOBJECTS=$(patsubst %,$(TEST_DIR)/%,$(SOURCES:.c=.o)) 
 
-TEST_FLAGS=-O3 -g -I. -I.. -I../../include/ -I../../include/am335x/ -DTEST_BUILD -DSPI_CUSTOM_TIMING_CALLBACK
+TEST_FLAGS=-O3 -g -I. -I.. -I../../include/ -I../../include/am335x/ -DTEST_BUILD -DSPI_CUSTOM_TIMING_CALLBACK -DPRU_SUPPORT_OVERRIDE_GPIO_FUNCS
 
 
 all: printStart $(TARGET) printEnd

@@ -1,14 +1,16 @@
 
+
 #include "acutest.h"
 
 // #define NOOP delay_test_cycles()
-#define PRU_SUPPORT_OVERRIDE_GPIO_FUNCS
+/* #define PRU_SUPPORT_OVERRIDE_GPIO_FUNCS */
 
 #include "../spi-devs.h"
 
 #include <pru_support_lib.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 static inline void delayCycles(int cycles)
 {
@@ -17,7 +19,6 @@ static inline void delayCycles(int cycles)
   // __nop();
 }
 
-void spi_delay(uint32_t time) { while (--time) delayCycles(10); }
 
 
 #include <stdint.h>
@@ -82,13 +83,13 @@ struct SimpleCycleTiming {
 typedef struct SimpleCycleTiming SCT_t;
 
 SCT_t* simplecycletiming_init() {
-  SCT_t *t = malloc(sizeof(SCT_t));
+  SCT_t *t = calloc(sizeof(SCT_t),1);
   t->cycle = 0;
 
   return t;
 }
 
-void sct_set_pin(SCT_t *this, Pin pin, uint32_t state) {
+void sct_set_pin(SCT_t *this, Pin pin, bool state) {
   if (pin == this->iopins.mosi) {
     this->current.mosi = state;
     this->current.miso = !state;
@@ -151,28 +152,14 @@ SpiPins_t iopins_inv = {
 };
 
 
-SCT_t _cycle_data_std = {
-  .cycle = 0,
-  .iopins = {
-    .miso = 10,
-    .mosi = 11,
-    .sck = 14,
-    .sck_dir = 0,
-  },
-};
-SCT_t _cycle_data_inv = {
-  .cycle = 0,
-  .iopins = {
-    .miso = 10,
-    .mosi = 11,
-    .sck = 14,
-    .sck_dir = 1,
-  },
-};
-
-SCT_t* cycle_data = &_cycle_data_std;
+SCT_t* cycle_data = NULL;
 
 void delay_test_cycles() {
+  sct_incr(cycle_data);
+}
+
+void spi_delay(uint32_t time) {
+  while (--time) delayCycles(10);
   sct_incr(cycle_data);
 }
 
@@ -180,11 +167,11 @@ void digitalWrite(uint32_t gpio_bitmask, bool state) {
   sct_set_pin(cycle_data, gpio_bitmask, state);
   // cycle_data.incr();
 }
-void digitalToggle(uint32_t gpio_bitmask) {
-  /* cycle_data->set_pin(gpio_bitmask, !cycle_data->get_pin(gpio_bitmask)); */
-  sct_set_pin(cycle_data, gpio_bitmask, !sct_get_pin(cycle_data, gpio_bitmask));
-  // cycle_data.incr();
-}
+/* void digitalToggle(uint32_t gpio_bitmask) { */
+/*   /\* cycle_data->set_pin(gpio_bitmask, !cycle_data->get_pin(gpio_bitmask)); *\/ */
+/*   sct_set_pin(cycle_data, gpio_bitmask, !sct_get_pin(cycle_data, gpio_bitmask)); */
+/*   // cycle_data.incr(); */
+/* } */
 bool digitalRead(uint32_t gpio_bitmask) {
   bool res = sct_get_pin(cycle_data, gpio_bitmask);
   /* bool res = cycle_data->get_pin(gpio_bitmask); */
@@ -209,31 +196,45 @@ void printBits(uint32_t data, uint8_t count) {
   printf(" ");
 }
 
-void printCycleData(uint8_t out) {
-  printf("sck:  ");
-  for (int i=0; i < cycle_data->cycle; i++) {
-    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
-    printf("%d", cycle_data->states[i].sck);
+struct cycle_out {
+  char input[128];
+  char sck[128];
+  char mosi[128];
+  char miso[128];
+  char other[128];
+};
+typedef struct cycle_out cycle_out_t;
+
+cycle_out_t printCycleData(uint32_t input, uint8_t count, uint8_t out) {
+  struct cycle_out co;
+
+  for (int i=0; i < count; i++) {
+    sprintf(&co.input[i], "%1d", input >> i & 0x1);
   }
-  printf("mosi: ");
   for (int i=0; i < cycle_data->cycle; i++) {
-    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
-    printf("%d", cycle_data->states[i].mosi);
-  }
-  printf("miso: ");
-  for (int i=0; i < cycle_data->cycle; i++) {
-    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
-    printf("%d", cycle_data->states[i].miso);
+    sprintf(&co.sck[i], "%1d", cycle_data->states[i].sck);
   }
   for (int i=0; i < cycle_data->cycle; i++) {
-    // std::cout << (i % timings.sck_cycle == 0 ? " " : "");
-    /* std::cout << cycle_data->states[i].other_state); */
-    printf("%d", cycle_data->states[i].other_state);
+    sprintf(&co.mosi[i], "%1d", cycle_data->states[i].mosi);
   }
-  printf("read out: %d ", out);
+  for (int i=0; i < cycle_data->cycle; i++) {
+    sprintf(&co.miso[i], "%1d", cycle_data->states[i].miso);
+  }
+  for (int i=0; i < cycle_data->cycle; i++) {
+    sprintf(&co.other[i], "%1d", cycle_data->states[i].other_state);
+  }
+
+  printf("\ninput:  %s", (char*)&co.input);
+  printf("\nsck:    %s", (char*)&co.sck);
+  printf("\nmosi:   %s", (char*)&co.mosi);
+  printf("\nmiso:   %s", (char*)&co.miso);
+  printf("\nother:  %s", (char*)&co.other);
+  printf("\nno_cycles: %lu, read out: %d \n", cycle_data->cycle, out);
+  printf("\n");
   /* std::cout<<std::bitset<8>(out)<<std::endl; */
   printBits(out, 8);
 
+  return co;
 };
 
 SpiTimings_t timings = {
@@ -243,13 +244,65 @@ SpiTimings_t timings = {
   .post = 7,
 };
 
+#define TEST_STR(a, b) \
+  TEST_CHECK_(strcmp(a,b) == 0, "expected: %s found: %s", b, a);
+
+/* extern uint32_t spi_xfer_cpha0(uint32_t data, uint8_t bit_count, SpiPins_t pins, SpiTimings_t timings); */
+/* extern  uint32_t spi_xfer_cpha1(uint32_t data, uint8_t bit_count, SpiPins_t pins, SpiTimings_t timings); */
 void test_example(void)
 {
   int a = 1;
   int b = 2;
   TEST_CHECK_(a + b == 3, "Expected %d, got %d", 3, a + b);
 
-  /* TEST_CHECK_(a + 2*b == 3, "Expected %d, got %d", 3, a + 2*b); */
+
+
+  uint32_t out;
+
+  // Mode 0
+  {
+    SCT_t _cycle_data0 = {
+      .cycle = 0,
+      .iopins = iopins,
+    };
+
+    cycle_data = &_cycle_data0;
+
+    printf("\nRunning... mode 0\n");
+    digitalWrite(7, HIGH);
+
+    uint32_t input = 0xAA;
+    uint32_t count = 8;
+    out = spi_xfer_cpha0(input, count, iopins, timings);
+
+    cycle_out_t out0 = printCycleData(input, count, out);
+    TEST_STR(out0.sck,  "0011001100110011001100110011001100");
+    TEST_STR(out0.mosi, "0000011110000111100001111000011110");
+    TEST_STR(out0.miso, "1113300221133002211330022113300221");
+  }
+
+  // Mode 1
+  {
+    SCT_t _cycle_data1 = {
+      .cycle = 0,
+      .iopins = iopins_inv,
+    };
+
+    cycle_data = &_cycle_data1;
+
+    printf("\nRunning... mode 1\n");
+    digitalWrite(7, HIGH);
+
+    uint32_t input = 0xAA;
+    uint32_t count = 8;
+    out = spi_xfer_cpha0(input, count, iopins_inv, timings);
+
+    cycle_out_t out0 = printCycleData(input, count, out);
+    TEST_STR(out0.sck,  "1100110011001100110011001100110011");
+    TEST_STR(out0.mosi, "0000011110000111100001111000011110");
+    TEST_STR(out0.miso, "1113300221133002211330022113300221");
+  }
+
 }
 
 TEST_LIST = {
