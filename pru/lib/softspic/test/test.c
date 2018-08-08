@@ -342,7 +342,7 @@ void test_example(void)
     out = spi_xfer_cpha1(input, count, iopins_inv, timings);
 
     cycle_out_t out0 = printCycleData(input, count, out);
-    TEST_STR(out0.sck,  "110101010101010101");
+    TEST_STR(out0.sck,  "101010101010101011");
     TEST_STR(out0.mosi, "000110011001100110");
     TEST_STR(out0.miso, "111001100110011001");
   }
