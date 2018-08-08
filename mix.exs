@@ -63,7 +63,7 @@ defmodule Pru.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:ex_doc, "~> 0.18.0"},
       {:toolchain_extras, "~> 0.2.3"},
       {:toolchain_extras_pru_cgt, "~> 3.0.1"},
       {:elixir_make, "~> 0.3"},
