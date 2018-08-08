@@ -35,7 +35,7 @@ GEN_DIR=gen
 TEST_DIR=test
 
 #Common compiler flags (Defined in 'PRU Optimizing C/C++ Compiler User's Guide)
-CFLAGS=-v3 -O2 --display_error_number --endian=little --hardware_mac=on --obj_directory=$(GEN_DIR) --pp_directory=$(GEN_DIR) -ppd -ppa
+CFLAGS=-v3 -O2 --c99 --display_error_number --endian=little --hardware_mac=on --obj_directory=$(GEN_DIR) --pp_directory=$(GEN_DIR) -ppd -ppa
 
 TARGET=$(GEN_DIR)/$(PROJ_NAME).lib
 SOURCES=$(wildcard *.c)
