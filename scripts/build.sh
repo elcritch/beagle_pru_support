@@ -8,9 +8,20 @@
 set -e
 set -x
 
-WORK_DIR=$1
-# TARBALL_PATH=$2
+echo "ARTIFACT PWD:" $PWD
+echo "ARTIFACT ARGS:" $*
+# realpath --relative-to=$absolute $current
+
+WORK_DIR="$1"
 INSTALL_DIR=${2:-_build/pru/}
+# WORK_DIR=`realpath --relative-to=$PWD $1` 
+# TARBALL_PATH=$2
+# INSTALL_DIR=`realpath --relative-to="$PWD" "${2:-_build/pru/}"`
+# INSTALL_DIR=".nerves/artifacts/beagle_pru_support-linux_x86_64-0.7.3"
+
+echo ""
+echo "ARTIFACT WORK_DIR:" $WORK_DIR
+echo "ARTIFACT INSTALL_DIR:" $INSTALL_DIR
 
 BUILD_OS=$(uname -s)
 
@@ -35,3 +46,4 @@ mkdir -p $WORK_DIR/$INSTALL_DIR
 cp -R $INSTALL_DIR/ $WORK_DIR/$INSTALL_DIR
 
 
+echo "DONE"

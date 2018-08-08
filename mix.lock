@@ -1,9 +1,12 @@
 %{
-  "distillery": {:hex, :distillery, "1.5.2", "eec18b2d37b55b0bcb670cf2bcf64228ed38ce8b046bb30a9b636a6f5a4c0080", [:mix], [], "hexpm"},
+  "distillery": {:hex, :distillery, "1.5.3", "b2f4fc34ec71ab4f1202a796f9290e068883b042319aa8c9aa45377ecac8597a", [:mix], [], "hexpm"},
   "earmark": {:hex, :earmark, "1.2.5", "4d21980d5d2862a2e13ec3c49ad9ad783ffc7ca5769cf6ff891a4553fbaae761", [:mix], [], "hexpm"},
-  "elixir_make": {:hex, :elixir_make, "0.4.1", "6628b86053190a80b9072382bb9756a6c78624f208ec0ff22cb94c8977d80060", [:mix], [], "hexpm"},
-  "ex_doc": {:hex, :ex_doc, "0.18.3", "f4b0e4a2ec6f333dccf761838a4b253d75e11f714b85ae271c9ae361367897b7", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
-  "nerves": {:hex, :nerves, "1.0.1", "06e311584bf346622afc37ffd6f0eb581288c918ed71b8a7a14f230062eabf31", [:mix], [{:distillery, "~> 1.4", [hex: :distillery, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}], "hexpm"},
-  "toolchain_extras": {:git, "https://github.com/elcritch/toolchain_extras.git", "376fc5bf45ee9d462b354c9ac5a724b6f7fde680", [branch: "exper-pkg-compile"]},
+  "elixir_make": {:hex, :elixir_make, "0.4.2", "332c649d08c18bc1ecc73b1befc68c647136de4f340b548844efc796405743bf", [:mix], [], "hexpm"},
+  "ex_doc": {:hex, :ex_doc, "0.19.1", "519bb9c19526ca51d326c060cb1778d4a9056b190086a8c6c115828eaccea6cf", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}, {:makeup_elixir, "~> 0.7", [hex: :makeup_elixir, repo: "hexpm", optional: false]}], "hexpm"},
+  "makeup": {:hex, :makeup, "0.5.1", "966c5c2296da272d42f1de178c1d135e432662eca795d6dc12e5e8787514edf7", [:mix], [{:nimble_parsec, "~> 0.2.2", [hex: :nimble_parsec, repo: "hexpm", optional: false]}], "hexpm"},
+  "makeup_elixir": {:hex, :makeup_elixir, "0.8.0", "1204a2f5b4f181775a0e456154830524cf2207cf4f9112215c05e0b76e4eca8b", [:mix], [{:makeup, "~> 0.5.0", [hex: :makeup, repo: "hexpm", optional: false]}, {:nimble_parsec, "~> 0.2.2", [hex: :nimble_parsec, repo: "hexpm", optional: false]}], "hexpm"},
+  "nerves": {:hex, :nerves, "1.1.1", "2fc347fc796c9d0557a68f0da81c3e59c108800dae7f18ed468d7a7e6854c663", [:mix], [{:distillery, "~> 1.4", [hex: :distillery, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}], "hexpm"},
+  "nimble_parsec": {:hex, :nimble_parsec, "0.2.2", "d526b23bdceb04c7ad15b33c57c4526bf5f50aaa70c7c141b4b4624555c68259", [:mix], [], "hexpm"},
+  "toolchain_extras": {:hex, :toolchain_extras, "0.2.3", "8116b91e778fe7d1d59d4212c48781d45195f3b8e042ad3840a921e05a4e1281", [:mix], [{:nerves, "~> 1.0", [hex: :nerves, repo: "hexpm", optional: false]}], "hexpm"},
   "toolchain_extras_pru_cgt": {:hex, :toolchain_extras_pru_cgt, "3.0.1", "4fe34d5bb95238f777f8754f4f29a1749996163aac9ec09a22c23922c6728a36", [:mix], [{:nerves, "~> 1.0", [hex: :nerves, repo: "hexpm", optional: false]}, {:toolchain_extras, "~> 0.2", [hex: :toolchain_extras, repo: "hexpm", optional: false]}], "hexpm"},
 }
