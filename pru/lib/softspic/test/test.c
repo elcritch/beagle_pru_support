@@ -261,12 +261,12 @@ void test_example(void)
 
   // Mode 0
   {
-    SCT_t _cycle_data0 = {
+    SCT_t _cycle_data = {
       .cycle = 0,
       .iopins = iopins,
     };
 
-    cycle_data = &_cycle_data0;
+    cycle_data = &_cycle_data;
 
     printf("\nRunning... mode 0\n");
     digitalWrite(7, HIGH);
@@ -276,21 +276,43 @@ void test_example(void)
     out = spi_xfer_cpha0(input, count, iopins, timings);
 
     cycle_out_t out0 = printCycleData(input, count, out);
-    TEST_STR(out0.sck,  "0011001100110011001100110011001100");
-    TEST_STR(out0.mosi, "0000011110000111100001111000011110");
-    TEST_STR(out0.miso, "1113300221133002211330022113300221");
+    TEST_STR(out0.sck,  "001010101010101010");
+    TEST_STR(out0.mosi, "000110011001100110");
+    TEST_STR(out0.miso, "111001100110011001");
   }
 
   // Mode 1
   {
-    SCT_t _cycle_data1 = {
+    SCT_t _cycle_data = {
+      .cycle = 0,
+      .iopins = iopins,
+    };
+
+    cycle_data = &_cycle_data;
+
+    printf("\nRunning... mode 1\n");
+    digitalWrite(7, HIGH);
+
+    uint32_t input = 0xAA;
+    uint32_t count = 8;
+    out = spi_xfer_cpha1(input, count, iopins, timings);
+
+    cycle_out_t out0 = printCycleData(input, count, out);
+    TEST_STR(out0.sck,  "010101010101010100");
+    TEST_STR(out0.mosi, "000110011001100110");
+    TEST_STR(out0.miso, "111001100110011001");
+  }
+
+  // Mode 2
+  {
+    SCT_t _cycle_data = {
       .cycle = 0,
       .iopins = iopins_inv,
     };
 
-    cycle_data = &_cycle_data1;
+    cycle_data = &_cycle_data;
 
-    printf("\nRunning... mode 1\n");
+    printf("\nRunning... mode 2\n");
     digitalWrite(7, HIGH);
 
     uint32_t input = 0xAA;
@@ -298,9 +320,31 @@ void test_example(void)
     out = spi_xfer_cpha0(input, count, iopins_inv, timings);
 
     cycle_out_t out0 = printCycleData(input, count, out);
-    TEST_STR(out0.sck,  "1100110011001100110011001100110011");
-    TEST_STR(out0.mosi, "0000011110000111100001111000011110");
-    TEST_STR(out0.miso, "1113300221133002211330022113300221");
+    TEST_STR(out0.sck,  "110101010101010101");
+    TEST_STR(out0.mosi, "000110011001100110");
+    TEST_STR(out0.miso, "111001100110011001");
+  }
+
+  // Mode 3
+  {
+    SCT_t _cycle_data = {
+      .cycle = 0,
+      .iopins = iopins_inv,
+    };
+
+    cycle_data = &_cycle_data;
+
+    printf("\nRunning... mode 3\n");
+    digitalWrite(7, HIGH);
+
+    uint32_t input = 0xAA;
+    uint32_t count = 8;
+    out = spi_xfer_cpha1(input, count, iopins_inv, timings);
+
+    cycle_out_t out0 = printCycleData(input, count, out);
+    TEST_STR(out0.sck,  "110101010101010101");
+    TEST_STR(out0.mosi, "000110011001100110");
+    TEST_STR(out0.miso, "111001100110011001");
   }
 
 }

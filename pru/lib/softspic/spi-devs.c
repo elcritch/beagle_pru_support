@@ -35,7 +35,7 @@ inline bool spi_bit_cpha1(bool value, SpiPins_t pins, SpiTimings_t timings)
   bool read = 0;
 
   spi_clock_tick(pins);
-  spi_delay(timings.c0); /* Timings::delayCyclesP0(); */
+  /* spi_delay(timings.c0); /\* Timings::delayCyclesP0(); *\/ */
   digitalWrite((uint32_t)pins.mosi, value);
   // when DataTxEdge == TxClockRise (CPOL=1) data will be captured at falling edge propagation 
   spi_delay(timings.c1); /* Timings::delayCyclesP1(); */
@@ -44,7 +44,7 @@ inline bool spi_bit_cpha1(bool value, SpiPins_t pins, SpiTimings_t timings)
   spi_delay(timings.c0); /* Timings::delayCyclesC0(); */
   read = digitalRead(pins.miso); // reading at the middle of SCK pulse
   // wait until data is fetched by slave device,  while SCK low, checking DATAsheet for this interval
-  spi_delay(timings.c1); /* Timings::delayCyclesC1(); */
+  /* spi_delay(timings.c1); /\* Timings::delayCyclesC1(); *\/ */
 
   return read;
 }
@@ -63,10 +63,10 @@ inline bool spi_bit_cpha0(bool value, SpiPins_t pins, SpiTimings_t timings)
   spi_delay(timings.c0); /* Timings::delayCyclesC0(); */
   read = digitalRead(pins.miso); // reading at the middle of SCK pulse
   // wait until data is fetched by slave device,  while SCK high, checking DATAsheet for this interval
-  spi_delay(timings.c1); /* Timings::delayCyclesC1(); */
+  /* spi_delay(timings.c1); /\* Timings::delayCyclesC1(); *\/ */
   spi_clock_tock(pins); /* Clock::template tock<SpiPins_t>(); */
   // holding low, so there is enough time for data preparation and changing
-  spi_delay(timings.c0); /* Timings::delayCyclesP0(); */
+  /* spi_delay(timings.c0); /\* Timings::delayCyclesP0(); *\/ */
 
   return read;
 }
