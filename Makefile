@@ -1,4 +1,4 @@
-SUBDIRS = pru/lib/rpmsg pru/lib/pru_support pru/lib/msgpack pru/lib/softspi
+SUBDIRS = pru/lib/rpmsg pru/lib/pru_support pru/lib/msgpack pru/lib/softspic
 TEST_SUBDIRS = test/softspi_test
 
 export ARTIFACT_DIR = _build/pru
